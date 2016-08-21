@@ -15,6 +15,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+    private static final String KEY_CHEAT = "cheat";
     private static final int REQUEST_CODE_CHEAT = 0;
     private Button mTrueButton;
     private Button mFalseButton;
@@ -23,6 +24,9 @@ public class QuizActivity extends AppCompatActivity {
     private Button mCheatButton;
     private TextView mQuestionTextView;
 
+    private int mCurrentIndex = 0;
+    private boolean mIsCheater;
+
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_oceans, true),
             new Question(R.string.question_mideast, false),
@@ -30,9 +34,6 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_americas, true),
             new Question(R.string.question_asia, true)
     };
-
-    private int mCurrentIndex = 0;
-    private boolean mIsCheater;
 
     private  void updateQuestion() {
 //        Log.d(TAG, "Updating question text for question #" + mCurrentIndex, new Exception());
@@ -123,6 +124,7 @@ public class QuizActivity extends AppCompatActivity {
         if(savedInstanceState != null)
         {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheater = savedInstanceState.getBoolean(KEY_CHEAT, false);
         }
 
         updateQuestion();
@@ -148,6 +150,7 @@ public class QuizActivity extends AppCompatActivity {
         Log.i(TAG, "onSavedInstanceState");
 
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+        savedInstanceState.putBoolean(KEY_CHEAT, mIsCheater);
     }
 
     @Override
@@ -180,6 +183,7 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy() called");
     }
 
+    //TODO Keep users from cycling through all the questions to reset cheat flag
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.quiz, menu);
