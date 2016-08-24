@@ -35,6 +35,8 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_asia, true)
     };
 
+    private boolean[] mCheated = new boolean[]{false,false, false, false, false};
+
     private  void updateQuestion() {
 //        Log.d(TAG, "Updating question text for question #" + mCurrentIndex, new Exception());
         int question = mQuestionBank[mCurrentIndex].getTextResId();
@@ -46,7 +48,7 @@ public class QuizActivity extends AppCompatActivity {
 
         int messageResId = 0;
 
-        if (mIsCheater)
+        if (mCheated[mCurrentIndex])
         {
             messageResId = R.string.judgment_toast;
         } else
@@ -95,7 +97,7 @@ public class QuizActivity extends AppCompatActivity {
         mPreviousButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCurrentIndex=(mCurrentIndex - 1) % mQuestionBank.length;
+                mCurrentIndex=Math.abs((mCurrentIndex - 1) % mQuestionBank.length);
                 updateQuestion();
             }
         });
@@ -104,7 +106,7 @@ public class QuizActivity extends AppCompatActivity {
         mNextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public  void onClick(View v) {
-                mCurrentIndex=(mCurrentIndex+1)%mQuestionBank.length;
+                mCurrentIndex=Math.abs((mCurrentIndex+1)%mQuestionBank.length);
                 mIsCheater = false;
                 updateQuestion();
             }
@@ -141,6 +143,9 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            if (mIsCheater) {
+                mCheated[mCurrentIndex]=mIsCheater;
+            }
         }
     }
 
@@ -184,6 +189,8 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     //TODO Keep users from cycling through all the questions to reset cheat flag
+    // added array mCheated to store if the user cheated on a question
+    // need to decide where to put it in the code
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        getMenuInflater().inflate(R.menu.quiz, menu);
